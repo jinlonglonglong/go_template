@@ -1,0 +1,50 @@
+server:
+  addr: ":8080"
+
+application:
+  name: template
+  debug: true
+
+data:
+#  http:
+#    node:
+#      url: "http://127.0.0.1:10000"
+#      username: "admin"
+#      password: "123456"
+#      token-symbol: IBS
+#      address-length: 34
+#      max-idle-conn: 10
+#      disable-compression: true
+
+  mysql:
+    # 浏览器后台数据库
+    template:
+      url: root:fuckqqwwhs2019@tcp(127.0.0.1:11000)/scan?parseTime=True&loc=Local&multiStatements=true&charset=utf8
+      max-idle-conn: 50
+      max-open-conn: 50
+      log-mode: true
+
+  redis:
+    scan:
+      cluster: false
+      addr: 47.112.193.161:11001
+      password: "fuckqqwwhs2019"
+      pool-size: 50
+      db: 13
+#    scan:
+#      cluster: true
+#      addrs:
+#        - 10.99.0.96:6391
+#        - 10.99.0.96:6390
+#        - 10.99.0.97:6393
+#        - 10.99.0.97:6392
+#        - 10.99.0.98:6394
+#        - 10.99.0.98:6395
+#      password: ""
+#      pool-size: 50
+
+#  kafka:
+#    brokers:
+#      - a.kafka1:9092
+#      - a.kafka2:9092
+#      - a.kafka3:9092
