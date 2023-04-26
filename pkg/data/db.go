@@ -2,7 +2,7 @@ package data
 
 import (
 	"errors"
-	_ "github.com/go-sql-driver/mysql" // Do NOT remove me.
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang/glog"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"

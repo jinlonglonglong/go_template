@@ -19,16 +19,16 @@ data:
   mysql:
     # 浏览器后台数据库
     template:
-      url: root:fuckqqwwhs2019@tcp(127.0.0.1:11000)/scan?parseTime=True&loc=Local&multiStatements=true&charset=utf8
+      url: root:cjl123456@tcp(127.0.0.1:3306)/template?parseTime=True&loc=Local&multiStatements=true&charset=utf8
       max-idle-conn: 50
       max-open-conn: 50
       log-mode: true
 
   redis:
-    scan:
+    template:
       cluster: false
-      addr: 47.112.193.161:11001
-      password: "fuckqqwwhs2019"
+      addr: 127.0.0.1:6379
+      password:
       pool-size: 50
       db: 13
 #    scan:

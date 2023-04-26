@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 	"github.com/spf13/viper"
+	"net/http"
+	"template/pkg/api"
 	"template/pkg/frame"
 	"template/pkg/middleware"
 )
@@ -31,4 +33,24 @@ func main() {
 
 	r.Use(middleware.Cors())
 	r.Use(middleware.LoggerToFile())
+
+	api.Setup(r)
+	addr := viper.GetString("server.addr")
+
+	if len(addr) != 0 {
+		err := r.Run(addr)
+		if err != nil {
+			panic(err.Error())
+		}
+	} else {
+		err := r.Run()
+		if err != nil {
+			panic(err.Error())
+		}
+	}
+
+}
+
+func recoverHandler(c *gin.Context, err interface{}) {
+	c.JSON(http.StatusInternalServerError, err)
 }
