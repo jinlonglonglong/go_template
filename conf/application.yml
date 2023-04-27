@@ -4,6 +4,11 @@ server:
 application:
   name: template
   debug: true
+  constant:
+    TOKEN_HOUR_LIFESPAN: 1
+    API_SECRET: yoursecretstring
+
+
 
 data:
 #  http:

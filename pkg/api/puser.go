@@ -8,17 +8,17 @@ import (
 	"template/pkg/util"
 )
 
-type UserController struct {
+type PUserController struct {
 	Router *gin.RouterGroup
 }
 
 // 初始化路由
-func (controller UserController) Setup() {
+func (controller PUserController) Setup() {
 	handle := controller.Router.Group("user")
-	handle.POST("login", controller.login)
+	handle.POST("userInfo", controller.getUserInfo)
 }
 
-func (controller *UserController) login(c *gin.Context) {
+func (controller *PUserController) getUserInfo(c *gin.Context) {
 	var req dtos.UserDto
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusOK, gin.H{"error_code": util.ErrorCodeInvalidParams, "error_msg": "invalid params", "data": nil})
