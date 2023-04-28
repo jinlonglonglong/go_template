@@ -10,11 +10,18 @@ import (
 	"template/pkg/middleware"
 )
 
+type Option struct {
+}
+
 func main() {
 	defer glog.Flush()
 
 	frame.InitFramework()
 	defer frame.UnInitFramework()
+
+	service := NewService(Option{})
+	service.Init()
+	defer service.UnInit()
 
 	debug := viper.GetBool("application.debug")
 	if !debug {

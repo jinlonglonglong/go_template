@@ -30,7 +30,7 @@ func NewService(opt Option) *Service {
 
 func (service *Service) Init() {
 	go service.scan.Run(service.ctx)
-	go service.scan.Run2(service.ctx)
+	//go service.scan.Run2(service.ctx)
 }
 
 func (service *Service) UnInit() {
