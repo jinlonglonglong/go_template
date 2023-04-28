@@ -43,7 +43,7 @@ func (engine *Engine) Run(ctx context.Context) {
 		syncTicker.Stop()
 	}()
 
-	processCountTicker := time.NewTicker(time.Minute * 10)
+	processCountTicker := time.NewTicker(time.Minute * 1)
 	defer func() {
 		processCountTicker.Stop()
 	}()
