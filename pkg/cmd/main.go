@@ -90,8 +90,39 @@ func NewService(opt Option) *Service {
 func (service *Service) Init() {
 	go service.scan.Run(service.ctx)
 	//go service.scan.Run2(service.ctx)
+	//go SubscribeEvent()
+
 }
 
 func (service *Service) UnInit() {
 	service.shutdownFn()
 }
+
+//func SubscribeEvent() {
+//	client, err := ethclient.Dial("wss://snowy-alien-liquid.bsc.discover.quiknode.pro/ad3f1d96711a722a587e4f52b4fdef9eefb2e1c3/")
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	// 0x Protocol (ZRX) token address
+//	contractAddress := common.HexToAddress("0x17d70FF5670742d9bf7609AB3d1C790210ace997")
+//	query := ethereum.FilterQuery{
+//		Addresses: []common.Address{contractAddress},
+//	}
+//
+//	logs := make(chan types.Log)
+//	sub, err := client.SubscribeFilterLogs(context.Background(), query, logs)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	for {
+//		select {
+//		case err := <-sub.Err():
+//			log.Fatal(err)
+//		case vLog := <-logs:
+//			fmt.Println(vLog) // pointer to event log
+//		}
+//	}
+//
+//}

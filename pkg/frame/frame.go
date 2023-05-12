@@ -25,6 +25,7 @@ func InitFramework() {
 	data.InitHttpMgr()
 	data.InitSQLMgr()
 	data.InitRedisMgr()
+	data.InitBscClient()
 }
 
 // UnInitFramework 反初始化框架
@@ -32,4 +33,5 @@ func UnInitFramework() {
 	data.UnInitHttpMgr()
 	data.UninitSQLMgr()
 	data.UninitRedisMgr()
+	data.UnInitBscClient()
 }

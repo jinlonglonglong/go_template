@@ -2,17 +2,24 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/ethereum/go-ethereum/common/math"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"log"
 	"math/big"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestAdd(t *testing.T) {
@@ -140,7 +147,7 @@ func TestSubscribeEvent(t *testing.T) {
 	}
 
 	// 0x Protocol (ZRX) token address
-	contractAddress := common.HexToAddress("0x1D2F0da169ceB9fC7B3144628dB156f3F6c60dBE")
+	contractAddress := common.HexToAddress("0x17d70FF5670742d9bf7609AB3d1C790210ace997")
 	query := ethereum.FilterQuery{
 		Addresses: []common.Address{contractAddress},
 	}
@@ -159,4 +166,101 @@ func TestSubscribeEvent(t *testing.T) {
 			fmt.Println(vLog) // pointer to event log
 		}
 	}
+}
+
+const (
+	DOMAIN_NAME    = "MyContract"
+	DOMAIN_VERSION = "1"
+	DOMAIN_CHAINID = 1
+)
+
+type Person struct {
+	Name string `json:"name"`
+	Age  uint   `json:"age"`
+}
+
+func TestEIP712Signature(t *testing.T) {
+	// Replace this with the address of the user's wallet
+	walletAddress := "0x61e0499cF10d341A5E45FA9c211aF3Ba9A2b50ef"
+	salt := "some-random-string-or-hash-here"
+	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+
+	// Generate a random nonce to include in our challenge
+	nonceBytes := make([]byte, 32)
+	n, err := rand.Read(nonceBytes)
+	if n != 32 {
+		panic("nonce: n != 64 (bytes)")
+	} else if err != nil {
+		panic(err)
+	}
+	nonce := hex.EncodeToString(nonceBytes)
+
+	signerData := apitypes.TypedData{
+		Types: apitypes.Types{
+			"Challenge": []apitypes.Type{
+				{Name: "address", Type: "address"},
+				{Name: "nonce", Type: "string"},
+				{Name: "timestamp", Type: "string"},
+			},
+			"EIP712Domain": []apitypes.Type{
+				{Name: "name", Type: "string"},
+				{Name: "chainId", Type: "uint256"},
+				{Name: "version", Type: "string"},
+				{Name: "salt", Type: "string"},
+			},
+		},
+		PrimaryType: "Challenge",
+		Domain: apitypes.TypedDataDomain{
+			Name:    "ETHChallenger",
+			Version: "1",
+			Salt:    salt,
+			ChainId: math.NewHexOrDecimal256(1),
+		},
+		Message: apitypes.TypedDataMessage{
+			"timestamp": timestamp,
+			"address":   walletAddress,
+			"nonce":     nonce,
+		},
+	}
+
+	typedDataHash, _ := signerData.HashStruct(signerData.PrimaryType, signerData.Message)
+	domainSeparator, _ := signerData.HashStruct("EIP712Domain", signerData.Domain.Map())
+
+	rawData := []byte(fmt.Sprintf("\x19\x01%s%s", string(domainSeparator), string(typedDataHash)))
+	challengeHash := crypto.Keccak256Hash(rawData)
+	fmt.Println(challengeHash)
+
+	privateKey, err := crypto.HexToECDSA("fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19")
+	signature, err := crypto.Sign(challengeHash.Bytes(), privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(hexutil.Encode(signature))
+
+	uint256Ty, _ := abi.NewType("uint256", "", nil)
+	bytesTy, _ := abi.NewType("bytes", "", nil)
+	addressTy, _ := abi.NewType("address", "", nil)
+
+	arguments := abi.Arguments{
+		{
+			Type: addressTy,
+		},
+		{
+			Type: bytesTy,
+		},
+		{
+			Type: uint256Ty,
+		},
+	}
+
+	bytes, _ := arguments.Pack(
+		common.HexToAddress("0x0000000000000000000000000000000000000000"),
+		signature,
+		big.NewInt(42),
+	)
+
+	crypto.Keccak256Hash(bytes)
+
+	log.Println(crypto.Keccak256Hash(bytes))
+
 }

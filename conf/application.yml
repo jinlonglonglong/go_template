@@ -20,6 +20,24 @@ data:
 #      address-length: 34
 #      max-idle-conn: 10
 #      disable-compression: true
+  bsc:
+    mainnet:
+      node:
+        - https://snowy-alien-liquid.bsc.discover.quiknode.pro/ad3f1d96711a722a587e4f52b4fdef9eefb2e1c3/
+        - https://bsc-dataseed1.binance.org
+        - https://bsc-dataseed2.binance.org
+        - https://bsc-dataseed3.binance.org
+        - https://bsc-dataseed4.binance.org
+        - https://bsc-mainnet.public.blastapi.io
+        - https://bsc-dataseed1.defibit.io
+    testnet:
+      node:
+        - https://data-seed-prebsc-1-s1.binance.org:8545
+        - https://data-seed-prebsc-2-s3.binance.org:8545
+        - https://data-seed-prebsc-1-s2.binance.org:8545
+        - https://data-seed-prebsc-2-s2.binance.org:8545
+        - https://data-seed-prebsc-1-s3.binance.org:8545
+        - https://data-seed-prebsc-2-s3.binance.org:8545
 
   mysql:
     # 浏览器后台数据库
