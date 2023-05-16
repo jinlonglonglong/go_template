@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -16,10 +14,8 @@ import (
 	"github.com/ethereum/go-ethereum/signer/core/apitypes"
 	"log"
 	"math/big"
-	"strconv"
 	"strings"
 	"testing"
-	"time"
 )
 
 func TestAdd(t *testing.T) {
@@ -180,20 +176,6 @@ type Person struct {
 }
 
 func TestEIP712Signature(t *testing.T) {
-	// Replace this with the address of the user's wallet
-	walletAddress := "0x61e0499cF10d341A5E45FA9c211aF3Ba9A2b50ef"
-	salt := "some-random-string-or-hash-here"
-	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
-
-	// Generate a random nonce to include in our challenge
-	nonceBytes := make([]byte, 32)
-	n, err := rand.Read(nonceBytes)
-	if n != 32 {
-		panic("nonce: n != 64 (bytes)")
-	} else if err != nil {
-		panic(err)
-	}
-	nonce := hex.EncodeToString(nonceBytes)
 
 	signerData := apitypes.TypedData{
 		Types: apitypes.Types{
@@ -230,7 +212,7 @@ func TestEIP712Signature(t *testing.T) {
 	challengeHash := crypto.Keccak256Hash(rawData)
 	fmt.Println(challengeHash)
 
-	privateKey, err := crypto.HexToECDSA("fad9c8855b740a0b7ed4c221dbad0f33a83a49cad6b3fe8d5817ac83d38b6a19")
+	privateKey, err := crypto.HexToECDSA("")
 	signature, err := crypto.Sign(challengeHash.Bytes(), privateKey)
 	if err != nil {
 		log.Fatal(err)
